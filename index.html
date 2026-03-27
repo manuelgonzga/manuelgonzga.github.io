@@ -67,6 +67,7 @@
       z-index: 0;
       pointer-events: none;
       overflow: hidden;
+      max-width: 100vw;
     }
 
     .bg-grid {
@@ -512,29 +513,18 @@
     }
 
     .apps-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      max-width: 1060px;
+      max-width: 1200px;
       margin: 0 auto;
     }
 
     .apps-row {
       display: flex;
-      gap: 24px;
+      gap: 20px;
     }
 
     .apps-row .app-card {
       flex: 1;
       min-width: 0;
-    }
-
-    .apps-row-2 {
-      justify-content: center;
-    }
-
-    .apps-row-2 .app-card {
-      flex: 0 0 calc(33.333% - 16px);
     }
 
     /* App card */
@@ -863,9 +853,13 @@
       padding: 40px 36px;
       max-width: 620px;
       width: 100%;
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
       transform: translateY(20px);
       transition: transform 0.22s;
       position: relative;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.1) transparent;
     }
 
     .contact-modal-overlay.open .contact-modal-box {
@@ -1038,13 +1032,10 @@
     }
 
     @media (max-width: 520px) {
-      .contact-options {
-        grid-template-columns: 1fr;
-      }
-
-      .contact-modal-box {
-        padding: 32px 22px;
-      }
+      .contact-options { grid-template-columns: 1fr; }
+      .contact-modal-box { padding: 28px 18px; border-radius: 20px; }
+      .contact-modal-overlay { padding: 12px; align-items: flex-end; }
+      .contact-modal-overlay.open .contact-modal-box { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
     }
 
     /* ─── Privacy Modal ─── */
@@ -1255,42 +1246,144 @@
       color: var(--text);
     }
 
+    /* ─── Hamburger ─── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      width: 32px;
+      height: 32px;
+    }
+    .nav-hamburger span {
+      display: block;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform 0.25s, opacity 0.25s;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ─── Mobile menu ─── */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 66px;
+      left: 0;
+      right: 0;
+      z-index: 98;
+      background: rgba(6, 6, 18, 0.97);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 6%;
+      flex-direction: column;
+      gap: 20px;
+      transform: translateY(-8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .mobile-menu.open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+    .mobile-nav-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .mobile-nav-links a {
+      display: block;
+      padding: 12px 0;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+    .mobile-nav-links a:hover { color: #c4b5fd; }
+    .mobile-lang {
+      display: flex;
+      gap: 2px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 3px;
+      width: fit-content;
+    }
+
     /* ─── Responsive ─── */
-    @media (max-width: 780px) {
+    @media (max-width: 1100px) {
       .apps-row {
-        flex-direction: column;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        flex-wrap: nowrap;
+        padding-bottom: 6px;
       }
+      .apps-row::-webkit-scrollbar { display: none; }
+      .apps-row .app-card { flex: 0 0 260px; }
+    }
 
-      .apps-row-2 .app-card {
-        flex: 1;
-      }
-
-      .about-inner {
-        grid-template-columns: 1fr;
-        gap: 48px;
-      }
-
-      .stats-inner {
-        grid-template-columns: repeat(3, 1fr);
-      }
+    @media (max-width: 860px) {
+      .about-story { grid-template-columns: 1fr; }
+      .about-pillars { grid-template-columns: repeat(2, 1fr); }
+      .stats-inner { grid-template-columns: repeat(3, 1fr); }
+      .apps-row .app-card { flex: 0 0 240px; }
     }
 
     @media (max-width: 640px) {
-      .nav-links {
-        display: none;
+      nav { padding: 0 4%; }
+      .nav-links { display: none; }
+      .lang-switch { display: none; }
+      .nav-hamburger { display: flex; }
+      .mobile-menu { display: flex; }
+
+      .hero { padding: 130px 5% 60px; }
+      .hero-prism-wrapper { width: 280px; }
+      .hero-cta { flex-direction: column; align-items: center; }
+      .hero-cta a { width: 100%; max-width: 320px; justify-content: center; }
+
+      .stats-section { padding: 48px 5%; }
+      .stats-inner { grid-template-columns: 1fr; gap: 12px; }
+      .stat-card { padding: 24px 20px; }
+
+      .apps-section { padding: 64px 5%; }
+      .apps-section .section-header { padding: 0 1%; }
+
+      .about-section { padding: 64px 5%; }
+      .about-headline { letter-spacing: -1.5px; }
+      .about-pillars { grid-template-columns: 1fr; }
+      .about-header { margin-bottom: 40px; }
+
+      .cta-box { padding: 40px 22px; }
+      .hero h1 { letter-spacing: -2px; }
+
+      footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 24px 5%;
+        gap: 12px;
       }
 
-      .stats-inner {
-        grid-template-columns: 1fr;
-      }
+      .modal-box { padding: 24px 18px; max-height: 90vh; }
+      .contact-modal-box { padding: 28px 18px; margin: 0 12px; }
+    }
 
-      .cta-box {
-        padding: 40px 22px;
-      }
-
-      .hero h1 {
-        letter-spacing: -2px;
-      }
+    @media (max-width: 400px) {
+      .hero h1 { font-size: 2.4rem; letter-spacing: -1.5px; }
+      .hero-prism-wrapper { width: 220px; }
     }
   </style>
 </head>
@@ -1322,8 +1415,24 @@
         <button class="lang-btn active" onclick="setLang('en')">EN</button>
         <button class="lang-btn" onclick="setLang('es')">ES</button>
       </div>
+      <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <ul class="mobile-nav-links">
+      <li><a href="#apps" onclick="closeMobileMenu()" data-i18n="nav.apps">Apps</a></li>
+      <li><a href="#about" onclick="closeMobileMenu()" data-i18n="nav.about">About</a></li>
+      <li><a href="#" onclick="openContact();closeMobileMenu();return false;" data-i18n="nav.contact">Contact</a></li>
+    </ul>
+    <div class="mobile-lang">
+      <button class="lang-btn active" id="mb-lang-en" onclick="setLang('en');updateMobileLang()">EN</button>
+      <button class="lang-btn" id="mb-lang-es" onclick="setLang('es');updateMobileLang()">ES</button>
+    </div>
+  </div>
 
   <!-- Marquee — fixed under nav -->
   <div class="marquee-section" aria-hidden="true">
@@ -1533,7 +1642,7 @@
         </div>
 
         <!-- Space Focus -->
-        <div class="app-card card-spacefocus card-testing reveal delay-2">
+        <div class="app-card card-spacefocus reveal delay-2">
           <div class="app-icon"><img src="icons/stayfocus.png" alt="Space Focus" /></div>
           <div class="app-category" data-i18n="spacefocus.cat">Productivity</div>
           <h3>Space Focus</h3>
@@ -1557,17 +1666,29 @@
             </div>
           </div>
           <div class="card-actions">
-            <div class="testing-badge"><span class="testing-dot"></span><span data-i18n="badge.testing">In
-                testing</span></div>
+            <a href="https://play.google.com/store/apps/details?id=com.manuglezg.SpaceFocus&hl=es_419" target="_blank" rel="noopener" class="play-badge">
+              <svg class="play-badge-logo" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0.431 0.368C0.161 0.654 0 1.098 0 1.678V22.322C0 22.902 0.161 23.346 0.431 23.632L0.502 23.701L11.774 12.429V12.142L0.502 0.87L0.431 0.368Z" fill="url(#sf_a)" />
+                <path d="M15.56 16.219L11.774 12.43V12.143L15.561 8.356L15.651 8.407L20.168 10.991C21.459 11.727 21.459 12.915 20.168 13.652L15.651 16.236L15.56 16.219Z" fill="url(#sf_b)" />
+                <path d="M15.651 16.236L11.774 12.286L0.431 23.632C0.853 24.079 1.542 24.134 2.313 23.697L15.651 16.236Z" fill="url(#sf_c)" />
+                <path d="M15.651 8.407L2.313 0.946C1.542 0.509 0.853 0.564 0.431 1.011L11.774 12.286L15.651 8.407Z" fill="url(#sf_d)" />
+                <defs>
+                  <linearGradient id="sf_a" x1="10.726" y1="1.019" x2="-4.609" y2="12.0" gradientUnits="userSpaceOnUse"><stop stop-color="#00A0FF"/><stop offset="0.007" stop-color="#00A1FF"/><stop offset="0.26" stop-color="#00BEFF"/><stop offset="0.512" stop-color="#00D2FF"/><stop offset="0.76" stop-color="#00DFFF"/><stop offset="1" stop-color="#00E3FF"/></linearGradient>
+                  <linearGradient id="sf_b" x1="21.8" y1="12.0" x2="-0.179" y2="12.0" gradientUnits="userSpaceOnUse"><stop stop-color="#FFE000"/><stop offset="0.409" stop-color="#FFBD00"/><stop offset="0.775" stop-color="#FFA500"/><stop offset="1" stop-color="#FF9C00"/></linearGradient>
+                  <linearGradient id="sf_c" x1="13.428" y1="14.138" x2="-5.51" y2="33.31" gradientUnits="userSpaceOnUse"><stop stop-color="#FF3A44"/><stop offset="1" stop-color="#C31162"/></linearGradient>
+                  <linearGradient id="sf_d" x1="-1.809" y1="-4.788" x2="7.397" y2="4.418" gradientUnits="userSpaceOnUse"><stop stop-color="#32A071"/><stop offset="0.476" stop-color="#15CF74"/><stop offset="1" stop-color="#00F076"/></linearGradient>
+                </defs>
+              </svg>
+              <div class="play-badge-text">
+                <span class="play-badge-get" data-i18n="badge.get">GET IT ON</span>
+                <span class="play-badge-store">Google Play</span>
+              </div>
+            </a>
           </div>
-          <button class="privacy-btn" onclick="openPrivacy('spacefocus')" data-i18n="badge.privacy">Privacy
-            Policy</button>
+          <button class="privacy-btn" onclick="openPrivacy('spacefocus')" data-i18n="badge.privacy">Privacy Policy</button>
         </div>
 
-      </div><!-- end row 1 -->
-
-      <!-- Row 2 -->
-      <div class="apps-row apps-row-2">
+        <!-- PoopIt and Daily3 continue below -->
 
         <!-- PoopIt -->
         <div class="app-card card-poopit card-testing reveal">
@@ -1631,7 +1752,7 @@
           <button class="privacy-btn" onclick="openPrivacy('daily3')" data-i18n="badge.privacy">Privacy Policy</button>
         </div>
 
-      </div><!-- end row 2 -->
+      </div><!-- end apps-row -->
 
     </div>
   </section>
@@ -1857,18 +1978,24 @@
       },
       lastbtn: {
         title: 'Last Button · Privacy Policy',
-        updated: '',
+        updated: 'Last updated: March 2026',
         content: `
           <h4>1. What Data Do We Collect?</h4>
-          <p>Last Button does not collect any personal information such as name, email, or phone number. We store only:</p>
-          <p>• A randomly generated anonymous identifier linked to your device<br>• Your chosen public username (e.g. Player_A3K9X2)<br>• Game data: score, coin balance, inventory, and personal best</p>
-          <h4>2. Why Do We Use This Data?</h4>
-          <p>We use this data exclusively for game functionality: showing your username and score on the Leaderboard, saving your progress and upgrades in the cloud, and providing support if you contact us.</p>
-          <h4>3. Do We Share Your Data?</h4>
-          <p>No. We never sell or share your data with advertisers or third parties. Data is securely stored via Supabase.</p>
-          <h4>4. Data Retention & Deletion</h4>
-          <p>Your game data is stored as long as your anonymous session is active on your device. You can erase all your data at any time from Settings → "RESET ALL DATA". Uninstalling the app will remove your local session.</p>
-          <h4>5. Contact</h4>
+          <p>Last Button does not collect personal information such as your name, email, or phone number. We store only:</p>
+          <p>• A randomly generated anonymous identifier linked to your device<br>• Your chosen public username (e.g. Player_A3K9X2)<br>• Game data: score, coin balance, inventory, and personal best<br>• Crash reports and anonymous usage signals</p>
+          <h4>2. How Is This Data Used?</h4>
+          <p>Your data is used exclusively for game functionality: displaying your username and score on the Leaderboard, saving your progress and upgrades in the cloud, diagnosing errors, and understanding how the app is used to improve it.</p>
+          <h4>3. Third-Party Services</h4>
+          <p>Last Button uses the following third-party services, each governed by their own privacy policies:<br>
+          • <strong>Supabase</strong> — cloud storage for game progress and leaderboard<br>
+          • <strong>Google AdMob</strong> — in-app advertising; may process device identifiers<br>
+          • <strong>Sentry</strong> — crash reporting and error diagnostics<br>
+          • <strong>TelemetryDeck</strong> — anonymous usage analytics (no personal data)</p>
+          <h4>4. Data Sharing</h4>
+          <p>We never sell your data. Data shared with third-party services listed above is limited to what each service requires to function.</p>
+          <h4>5. Data Retention & Deletion</h4>
+          <p>Your game data is stored as long as your anonymous session is active. You can erase all data at any time from Settings → "RESET ALL DATA". Uninstalling the app removes your local session. To request deletion of cloud data, contact us at contactomglezg@gmail.com.</p>
+          <h4>6. Contact</h4>
           <p>contactomglezg@gmail.com</p>
         `
       },
@@ -1964,7 +2091,27 @@
       if (e.target === document.getElementById('privacy-modal')) closePrivacy();
     }
 
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closePrivacy(); closeContact(); } });
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const btn = document.getElementById('nav-hamburger');
+      const open = menu.classList.toggle('open');
+      btn.classList.toggle('open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+
+    function closeMobileMenu() {
+      document.getElementById('mobile-menu').classList.remove('open');
+      document.getElementById('nav-hamburger').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function updateMobileLang() {
+      const lang = document.documentElement.lang || 'en';
+      document.getElementById('mb-lang-en').classList.toggle('active', lang === 'en');
+      document.getElementById('mb-lang-es').classList.toggle('active', lang === 'es');
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closePrivacy(); closeContact(); closeMobileMenu(); } });
 
     /* ── Translations ── */
     const translations = {
